@@ -7,6 +7,7 @@ use Module::Load;
 use Try::Tiny;
 use Scalar::Util qw( looks_like_number );
 use Data::Dumper;
+use URI;
 
 our $VERSION = '0.001000'; $VERSION = eval $VERSION;
 
@@ -125,10 +126,11 @@ sub _do_call {
             );
         };
     } elsif ( $request->type eq 'GET' ) {
+        my $uri = URI->new( $request->api_endpoint );
+        $uri->query_form( %{ $request->query_params } );
+
         $http_response = try { 
-            $self->ua->get( $self->api_base . $request->endpoint . $request->query_string,
-                @{ $request->headers }
-            );
+            $self->ua->get( $uri, @{ $request->headers || [] } );
         } catch {
             $self->_throw_exception (
                 msg         => "Making HTTP GET",

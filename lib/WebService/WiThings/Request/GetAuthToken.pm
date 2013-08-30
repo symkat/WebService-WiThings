@@ -7,9 +7,9 @@ has oauth_callback => (
     is          => 'ro',
 );
 
-has endpoint => (
+has api_endpoint => (
     is          => 'ro',
-    default     => sub { "account/request_token" },
+    default     => sub { "https://oauth.withings.com/account/request_token" },
 );
 
 has query_params => (
