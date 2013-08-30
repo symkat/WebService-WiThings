@@ -126,8 +126,8 @@ sub _do_call {
             );
         };
     } elsif ( $request->type eq 'GET' ) {
-        my $uri = URI->new( $request->api_endpoint );
-        $uri->query_form( %{ $request->query_params } );
+        my $uri = $request->api_endpoint;
+        $uri .= $request->query_string ? "?" . $request->query_string : "";
 
         $http_response = try { 
             $self->ua->get( $uri, @{ $request->headers || [] } );
@@ -163,7 +163,7 @@ sub _create_response {
 
     # Create Request Object
     my $response = try {
-        "WebService::WiThings::Response::$class"->new( { response => $http_response } );
+        "WebService::WiThings::Response::$class"->new({ response => $http_response });
     } catch {
         $self->_throw_exception(
             msg         => "Creating API Response",

@@ -34,6 +34,20 @@ has 'query_string' => (
     is          => 'lazy',
 );
 
+# This is sadly required, URI::QueryParam doesn't order things
+# like we need for OAuth
+sub _build_query_string {
+    my ( $self ) = @_;
+    
+    my @query;
+    my @keys = sort keys %{ $self->query_params };
+    for my $key ( @keys ) {
+        push @query, "$key=" . uri_encode( $self->query_params->{$key}, { encode_reserved => 1 } );
+    }
+
+    return join( "&", @query );
+}
+
 sub as_exception { 
     return shift; 
 }

@@ -2,6 +2,9 @@ package WebService::WiThings::Response;
 use Moo::Role;
 use JSON qw( decode_json );
 
+has oauth_consumer_key => ( is => 'ro' );
+has oauth_token_secret => ( is => 'ro' );
+
 has response => (
     is => 'ro',
     isa => sub { ref $_[0] eq 'LWP::Authen::OAuth' },
